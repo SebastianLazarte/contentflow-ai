@@ -1,21 +1,37 @@
 import { NextResponse } from "next/server";
-import { adminSupabase,serverSupabase } from "@/lib/supabase"; // usamos el de servicio
+import { serverSupabase } from "@/lib/supabase"; // usa tu cliente
 
-export async function POST(req: Request) {
-  const { title, body } = await req.json();
-  if (!title || !body) return NextResponse.json({ ok: false, error: "Missing title/body" }, { status: 400 });
+// Crear un nuevo PRD
+export async function POST(request: Request) {
+  const body = await request.json();
+  const { title, body: description } = body;
 
-  const { data, error } = await adminSupabase().from("prd").insert({ title, body }).select().single();
-  if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+  if (!title || !description) {
+    return NextResponse.json({ error: "Title and body required" }, { status: 400 });
+  }
 
-  return NextResponse.json({ ok: true, prd: data }, { status: 201 });
+  const { data, error } = await serverSupabase()
+    .from("prd")
+    .insert([{ title, body: description }])
+    .select();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, prd: data[0] });
 }
 
+// Listar todos los PRDs
 export async function GET() {
   const { data, error } = await serverSupabase()
     .from("prd")
     .select("*")
     .order("created_at", { ascending: false });
-  if (error) return NextResponse.json({ ok:false, error:error.message }, { status:500 });
-  return NextResponse.json({ ok:true, prds:data });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, prds: data });
 }
