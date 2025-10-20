@@ -39,3 +39,50 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# =============== PYTHON / FASTAPI ===============
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+.eggs/
+
+# Logs / cache
+*.log
+*.pid
+*.sqlite3
+*.db
+.pytest_cache/
+.cache/
+.ipynb_checkpoints/
+
+# Jupyter & experiments
+agents-service/notebooks/.ipynb_checkpoints/
+agents-service/notebooks/*-checkpoint.ipynb
+
+# Environment variables
+agents-service/.env
+agents-service/.env.*
+.env
+
+# VSCode / JetBrains / System
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+.DS_Store
+
+# Mac & Windows artifacts
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# =============== SUPABASE / CREDENTIALS ===============
+supabase/.env
+supabase/.temp/
