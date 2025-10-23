@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel, field_validator
 
+from app.fact_checker import run_factcheck_step
 from app.supa import get_sb
 from app.writer import run_writer_step
 
@@ -46,7 +47,7 @@ def ensure_research_stage(prd_id: str) -> Dict[str, Any]:
     sb = get_sb()
     existing = (
         sb.table("content_version")
-        .select("id,stage,created_at")
+        .select("id,stage,content,created_at")
         .eq("prd_id", prd_id)
         .eq("stage", "research")
         .order("created_at", desc=True)
@@ -90,7 +91,7 @@ def run_pipeline(body: RunBody, x_api_key: str = Header(default="")) -> Dict[str
     if not prd.data:
         raise HTTPException(status_code=404, detail="prd_not_found")
 
-    ensure_research_stage(body.prd_id)
+    research_record = ensure_research_stage(body.prd_id)
 
     try:
         writer_result = run_writer_step(body.prd_id)
@@ -102,5 +103,26 @@ def run_pipeline(body: RunBody, x_api_key: str = Header(default="")) -> Dict[str
             raise HTTPException(status_code=409, detail="missing_research") from exc
         raise HTTPException(status_code=400, detail=message) from exc
 
-    run_id = str(uuid4())
-    return {"ok": True, "run_id": run_id, "writer": writer_result}
+    try:
+        factcheck_report = run_factcheck_step(body.prd_id)
+    except ValueError as exc:
+        message = str(exc)
+        if message in {"missing_research", "missing_draft"}:
+            raise HTTPException(status_code=409, detail=message) from exc
+        if message == "prd_not_found":
+            raise HTTPException(status_code=404, detail="prd_not_found") from exc
+        raise HTTPException(status_code=400, detail=message) from exc
+
+    if factcheck_report.get("status") == "FAIL":
+        raise HTTPException(status_code=422, detail={"factcheck": factcheck_report})
+
+    run_id = f"research+draft+fact-{uuid4()}"
+    return {
+        "ok": True,
+        "run_id": run_id,
+        "result": {
+            "research": research_record,
+            "draft": writer_result,
+            "factcheck": factcheck_report,
+        },
+    }
