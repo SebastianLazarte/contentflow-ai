@@ -31,8 +31,10 @@ export default async function PRDPage() {
         <ul>
           {prds.map((p: any) => (
             <li key={p.id} style={{ marginBottom: 8 }}>
-              <Link href={`/prd/${p.id}`}>{p.title}</Link>
-              <div style={{ fontSize: 12, color: "#666" }}>
+              <Link href={`/prd/${p.id}`} style={{ color: "#ffff" }}>
+                {p.title}
+              </Link>
+              <div style={{ fontSize: 12, color: "#ffff" }}>
                 {new Date(p.created_at).toLocaleString()}
               </div>
             </li>

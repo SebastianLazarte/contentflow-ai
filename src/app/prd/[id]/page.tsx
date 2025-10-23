@@ -21,7 +21,7 @@ export default async function PRDDetail({ params }: { params: { id: string } }) 
             <li key={v.id} style={{ marginBottom:16 }}>
               <strong>{v.stage}</strong>{" "}
               <small>({new Date(v.created_at).toLocaleString()})</small>
-              <pre style={{ whiteSpace:"pre-wrap", background:"#f6f6f6", padding:8 }}>{v.content}</pre>
+              <pre style={{ whiteSpace:"pre-wrap", background:"#f6f6f6",color: "#000", padding:8 }}>{v.content}</pre>
             </li>
           ))}
         </ul>
