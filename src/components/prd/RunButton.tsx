@@ -1,43 +1,42 @@
 "use client";
 import { useState } from "react";
 
-export default function RunButton({ prdId }: { prdId: string }) {
+export default function RunButton({
+  prdId,
+  onComplete,
+}: {
+  prdId: string;
+  onComplete?: () => void;
+}) {
   const [msg, setMsg] = useState("");
 
   const run = async () => {
-    setMsg("Ejecutando...");
+    setMsg("Running…");
     try {
       const res = await fetch("/api/run", {
         method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify({ prdId })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prdId }),
       });
 
-      // Intenta parsear JSON; si falla, cae a texto
       let payload: any = null;
-      let text = "";
-      try {
-        payload = await res.json();
-      } catch {
-        try { text = await res.text(); } catch {}
-      }
+      try { payload = await res.json(); } catch {}
 
       if (!res.ok) {
-        const err = (payload && (payload.error || payload.message)) || text || `HTTP ${res.status}`;
+        const err = payload?.error || payload?.detail || `HTTP ${res.status}`;
         setMsg(`Error: ${err}`);
-        return;
+      } else {
+        setMsg("Done ✅");
+        onComplete?.(); // immediate refresh callback
       }
-
-      const runId = (payload && (payload.run_id || payload.agents?.run_id)) || "ok";
-      setMsg(`Listo: ${runId}`);
     } catch (e: any) {
-      setMsg(`Error de red: ${e?.message || "falló la solicitud"}`);
+      setMsg(`Network error: ${e?.message || "failed"}`);
     }
   };
 
   return (
-    <div style={{ margin:"12px 0" }}>
-      <button onClick={run}>Ejecutar pipeline</button>
+    <div style={{ margin: "12px 0" }}>
+      <button onClick={run}>Run pipeline</button>
       {msg && <div><small>{msg}</small></div>}
     </div>
   );
