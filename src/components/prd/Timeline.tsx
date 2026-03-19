@@ -10,61 +10,60 @@ export default function Timeline({ prdId }: TimelineProps) {
   const { versions, loading, reload } = useVersions(prdId);
 
   return (
-    <section style={{ width: "100%", color: "#000" }}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <section style={{ width: "100%" }}>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
         <h2 style={{ marginTop: 16, marginBottom: 8 }}>Timeline</h2>
         <button
           type="button"
           onClick={reload}
           style={{
             fontSize: 12,
-            padding: "4px 8px",
-            borderRadius: 4,
-            border: "1px solid #000",
-            background: "#fff",
-            color: "#000",
+            padding: "6px 10px",
+            borderRadius: 10,
+            border: "1px solid var(--border)",
+            background: "var(--surface)",
+            color: "var(--foreground)",
+            cursor: "pointer",
           }}
         >
           Actualizar
         </button>
       </header>
       {loading && versions.length === 0 ? (
-        <p style={{ color: "#000" }}>Cargando versiones…</p>
+        <p style={{ color: "var(--muted)" }}>Cargando versiones...</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 14 }}>
           {versions.map((v: any) => (
             <li
               key={v.id}
               style={{
-                marginBottom: 16,
-                border: "1px solid #ddd",
-                borderRadius: 6,
-                padding: 12,
-                background: "#fafafa",
-                color: "#000",
+                border: "1px solid var(--border)",
+                borderRadius: 16,
+                padding: 14,
+                background: "var(--surface)",
+                color: "var(--foreground)",
+                boxShadow: "var(--shadow)",
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
                 <strong>{v.stage}</strong>
-                <small>{new Date(v.created_at).toLocaleString()}</small>
+                <small style={{ color: "var(--muted)" }}>{new Date(v.created_at).toLocaleString()}</small>
               </div>
               <pre
                 style={{
                   whiteSpace: "pre-wrap",
-                  background: "#f6f6f6",
-                  padding: 8,
+                  background: "var(--surface-muted)",
+                  padding: 10,
                   margin: 0,
-                  borderRadius: 4,
-                  color: "#000",
+                  borderRadius: 12,
+                  color: "var(--foreground)",
                 }}
               >
                 {typeof v.content === "string" ? v.content : JSON.stringify(v.content, null, 2)}
               </pre>
             </li>
           ))}
-          {!loading && versions.length === 0 && (
-            <li style={{ color: "#000" }}>Sin versiones aún.</li>
-          )}
+          {!loading && versions.length === 0 && <li style={{ color: "var(--muted)" }}>Sin versiones aun.</li>}
         </ul>
       )}
     </section>

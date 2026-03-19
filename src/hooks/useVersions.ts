@@ -5,7 +5,9 @@ type VersionsResponse = {
   versions?: any[];
 };
 
-export function useVersions(prdId: string, intervalMs = 3000, initialVersions: any[] = []) {
+const EMPTY_VERSIONS: any[] = [];
+
+export function useVersions(prdId: string, intervalMs = 3000, initialVersions: any[] = EMPTY_VERSIONS) {
   const [versions, setVersions] = useState<any[]>(initialVersions);
   const [loading, setLoading] = useState(initialVersions.length === 0);
   const isMountedRef = useRef(true);

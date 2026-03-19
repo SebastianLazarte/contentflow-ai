@@ -11,7 +11,7 @@ export default function RunButton({
   const [msg, setMsg] = useState("");
 
   const run = async () => {
-    setMsg("Running…");
+    setMsg("Running...");
     try {
       const res = await fetch("/api/run", {
         method: "POST",
@@ -20,14 +20,16 @@ export default function RunButton({
       });
 
       let payload: any = null;
-      try { payload = await res.json(); } catch {}
+      try {
+        payload = await res.json();
+      } catch {}
 
       if (!res.ok) {
         const err = payload?.error || payload?.detail || `HTTP ${res.status}`;
         setMsg(`Error: ${err}`);
       } else {
-        setMsg("Done ✅");
-        onComplete?.(); // immediate refresh callback
+        setMsg("Done");
+        onComplete?.();
       }
     } catch (e: any) {
       setMsg(`Network error: ${e?.message || "failed"}`);
@@ -36,8 +38,20 @@ export default function RunButton({
 
   return (
     <div style={{ margin: "12px 0" }}>
-      <button onClick={run}>Run pipeline</button>
-      {msg && <div><small>{msg}</small></div>}
+      <button
+        onClick={run}
+        style={{
+          padding: "10px 14px",
+          borderRadius: 12,
+          border: "1px solid var(--accent)",
+          background: "var(--accent)",
+          color: "var(--accent-foreground)",
+          cursor: "pointer",
+        }}
+      >
+        Run pipeline
+      </button>
+      {msg && <div><small style={{ color: "var(--muted)" }}>{msg}</small></div>}
     </div>
   );
 }
