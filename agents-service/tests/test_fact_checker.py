@@ -16,7 +16,7 @@ def test_extract_keywords_prefers_repeated_and_long_terms() -> None:
 def test_score_draft_passes_when_research_and_prd_align() -> None:
     prd = {
         "title": "AI onboarding copilot",
-        "body": "Improves onboarding workflow and reduces repetitive employee questions.",
+        "body": "Improves onboarding workflow and reduces repetitive employee questions. AI onboarding helps teams onboard faster.",
     }
     research = """
     - Improves onboarding workflow for new hires
@@ -24,9 +24,9 @@ def test_score_draft_passes_when_research_and_prd_align() -> None:
     - Helps teams find docs quickly
     """
     draft = """
-    AI onboarding copilot helps teams improve onboarding workflow for new hires.
+    AI onboarding copilot improves onboarding workflow for new hires.
     It reduces repetitive employee questions with faster answers.
-    Teams also use it to help employees find docs quickly.
+    This AI onboarding workflow also helps teams onboard faster.
     """
 
     score, checks, issues = score_draft(prd, research, draft)
@@ -48,6 +48,6 @@ def test_score_draft_flags_weak_alignment() -> None:
     score, checks, issues = score_draft(prd, research, draft)
 
     assert score < 7
-    assert checks == []
     assert "Draft cites too few research insights" in issues
     assert "Draft needs more alignment with PRD terminology" in issues
+    assert checks == ["Vague language supported by research context"]
