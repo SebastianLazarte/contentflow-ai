@@ -24,9 +24,8 @@ def test_score_draft_passes_when_research_and_prd_align() -> None:
     - Helps teams find docs quickly
     """
     draft = """
-    AI onboarding copilot improves onboarding workflow for new hires.
-    It reduces repetitive employee questions with faster answers.
-    This AI onboarding workflow also helps teams onboard faster.
+    AI onboarding copilot improves onboarding workflow for new hires and reduces repetitive employee questions with faster answers.
+    This AI onboarding solution helps teams find docs quickly and onboard faster.
     """
 
     score, checks, issues = score_draft(prd, research, draft)
