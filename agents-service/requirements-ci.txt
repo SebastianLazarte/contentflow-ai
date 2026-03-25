@@ -4,4 +4,9 @@ openai==1.109.1
 pydantic==2.11.3
 python-dotenv==1.1.0
 pytest==8.4.2
+postgrest==2.22.0
+realtime==2.5.3
+storage3==0.12.1
 supabase==2.22.0
+supabase-auth==2.22.0
+supabase-functions==2.22.0
