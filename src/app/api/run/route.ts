@@ -52,7 +52,7 @@ export async function POST(req: Request) {
               error: "agents_service_error",
               detail: agents ?? (text || `HTTP ${res.status}`),
             },
-            { status: 502 }
+            { status: res.status }
           );
         }
 

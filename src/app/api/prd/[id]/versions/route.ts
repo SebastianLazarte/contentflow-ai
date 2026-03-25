@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { serverSupabase } from "@/lib/supabase";
 
-export async function GET(req: Request, context: { params: { id?: string } }) {
-  const { params } = context;
-  const id = params?.id;
+type RouteContext = {
+  params: Promise<{
+    id?: string;
+  }>;
+};
+
+export async function GET(req: Request, context: RouteContext) {
+  const { id } = await context.params;
 
   if (!id) {
     return NextResponse.json({ ok: false, error: "Missing or invalid ID" }, { status: 400 });
