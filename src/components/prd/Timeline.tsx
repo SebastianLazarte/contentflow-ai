@@ -33,9 +33,9 @@ export default function Timeline({ prdId }: TimelineProps) {
         <p style={{ color: "var(--muted)" }}>Cargando versiones...</p>
       ) : (
         <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 14 }}>
-          {versions.map((v: any) => (
+          {versions.map((version) => (
             <li
-              key={v.id}
+              key={version.id}
               style={{
                 border: "1px solid var(--border)",
                 borderRadius: 16,
@@ -46,8 +46,8 @@ export default function Timeline({ prdId }: TimelineProps) {
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
-                <strong>{v.stage}</strong>
-                <small style={{ color: "var(--muted)" }}>{new Date(v.created_at).toLocaleString()}</small>
+                <strong>{version.stage}</strong>
+                <small style={{ color: "var(--muted)" }}>{new Date(version.created_at).toLocaleString()}</small>
               </div>
               <pre
                 style={{
@@ -59,7 +59,9 @@ export default function Timeline({ prdId }: TimelineProps) {
                   color: "var(--foreground)",
                 }}
               >
-                {typeof v.content === "string" ? v.content : JSON.stringify(v.content, null, 2)}
+                {typeof version.content === "string"
+                  ? version.content
+                  : JSON.stringify(version.content, null, 2)}
               </pre>
             </li>
           ))}

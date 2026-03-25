@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { serverSupabase } from "@/lib/supabase";
 
 export async function GET(req: Request, context: { params: { id?: string } }) {
-  const { params } = context; // Extraer params del contexto
-  const id = params?.id; // Asegurarse de que params.id esté definido
+  const { params } = context;
+  const id = params?.id;
 
   if (!id) {
     return NextResponse.json({ ok: false, error: "Missing or invalid ID" }, { status: 400 });
@@ -21,7 +21,7 @@ export async function GET(req: Request, context: { params: { id?: string } }) {
     }
 
     return NextResponse.json({ ok: true, versions: data }, { status: 200 });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ ok: false, error: "Internal Server Error" }, { status: 500 });
   }
 }

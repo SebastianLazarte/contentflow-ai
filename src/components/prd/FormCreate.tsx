@@ -20,7 +20,7 @@ const buttonStyle = {
   cursor: "pointer",
 } as const;
 
-export default function FormCreate({ onCreated }: { onCreated?: () => void }) {
+export default function FormCreate({ onCreated }: { onCreated?: () => void | Promise<void> }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [msg, setMsg] = useState("");
@@ -38,7 +38,7 @@ export default function FormCreate({ onCreated }: { onCreated?: () => void }) {
       setMsg("PRD creado");
       setTitle("");
       setBody("");
-      onCreated?.();
+      await onCreated?.();
     } else {
       setMsg(`Error: ${json.error ?? "desconocido"}`);
     }

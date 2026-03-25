@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint src scripts eslint.config.mjs next.config.ts postcss.config.mjs --no-error-on-unmatched-pattern",
+    "check:migrations": "node scripts/check-migrations.mjs",
+    "test:agents": "python -m pytest agents-service/tests -q"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.75.0",

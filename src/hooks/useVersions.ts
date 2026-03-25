@@ -1,14 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type VersionsResponse = {
-  ok?: boolean;
-  versions?: any[];
+export type ContentVersion = {
+  id: string;
+  stage: string;
+  content: string | Record<string, unknown>;
+  created_at: string;
 };
 
-const EMPTY_VERSIONS: any[] = [];
+type VersionsResponse = {
+  ok?: boolean;
+  versions?: ContentVersion[];
+};
 
-export function useVersions(prdId: string, intervalMs = 3000, initialVersions: any[] = EMPTY_VERSIONS) {
-  const [versions, setVersions] = useState<any[]>(initialVersions);
+const EMPTY_VERSIONS: ContentVersion[] = [];
+
+export function useVersions(
+  prdId: string,
+  intervalMs = 3000,
+  initialVersions: ContentVersion[] = EMPTY_VERSIONS
+) {
+  const [versions, setVersions] = useState<ContentVersion[]>(initialVersions);
   const [loading, setLoading] = useState(initialVersions.length === 0);
   const isMountedRef = useRef(true);
 

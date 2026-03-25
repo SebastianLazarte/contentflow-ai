@@ -1,5 +1,31 @@
 "use client";
+
 import { useState } from "react";
+
+type RunApiResponse = {
+  error?: string;
+  detail?: unknown;
+};
+
+function getErrorMessage(payload: RunApiResponse | null, status: number): string {
+  if (!payload) {
+    return `HTTP ${status}`;
+  }
+
+  if (typeof payload.error === "string" && payload.error) {
+    return payload.error;
+  }
+
+  if (typeof payload.detail === "string" && payload.detail) {
+    return payload.detail;
+  }
+
+  if (payload.detail && typeof payload.detail === "object") {
+    return JSON.stringify(payload.detail);
+  }
+
+  return `HTTP ${status}`;
+}
 
 export default function RunButton({
   prdId,
@@ -19,20 +45,22 @@ export default function RunButton({
         body: JSON.stringify({ prdId }),
       });
 
-      let payload: any = null;
+      let payload: RunApiResponse | null = null;
       try {
-        payload = await res.json();
-      } catch {}
+        payload = (await res.json()) as RunApiResponse;
+      } catch {
+        payload = null;
+      }
 
       if (!res.ok) {
-        const err = payload?.error || payload?.detail || `HTTP ${res.status}`;
-        setMsg(`Error: ${err}`);
+        setMsg(`Error: ${getErrorMessage(payload, res.status)}`);
       } else {
         setMsg("Done");
         onComplete?.();
       }
-    } catch (e: any) {
-      setMsg(`Network error: ${e?.message || "failed"}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "failed";
+      setMsg(`Network error: ${message}`);
     }
   };
 

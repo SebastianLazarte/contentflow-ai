@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
@@ -49,7 +50,7 @@ export default function RootLayout({
       >
         <div className="app-shell">
           <header className="app-header">
-            <a href="/prd" className="app-brand">ContentFlow AI</a>
+            <Link href="/prd" className="app-brand">ContentFlow AI</Link>
             <ThemeToggle />
           </header>
           <div className="app-content">{children}</div>
